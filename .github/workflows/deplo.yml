@@ -1,0 +1,48 @@
+name: Specific Folder Deployment
+
+on:
+  # Triggers the workflow on push to the main branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Ensures only one deployment runs at a time
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
+        env:
+          # VIVA TIP: Explain that these are Environment Variables
+          # used to configure the build without hardcoding values.
+          DEPLOYMENT_ENV: "production"
+          STUDENT_ID: "MEENU_2217"
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # This specifies the EXACT folder to deploy
+          path: 'build'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
