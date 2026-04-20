@@ -1,32 +1,13 @@
-name: Secret-Enhanced Deployment
+name: Simple Workflow
 
 on:
   push:
-    branches: ["main"]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+    branches: [main]
+  pull_request:
 
 jobs:
-  deploy:
+  hello:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Inject Secret into HTML
-        # This takes the secret and replaces the placeholder in your HTML
-        run: |
-          sed -i "s/SECRET_PLACEHOLDER/${{ secrets.STUDENT_ID }}/g" build/index.html
-
-      - name: Upload and Deploy
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: 'build'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Say Hello
+        run: echo "Hello World"
